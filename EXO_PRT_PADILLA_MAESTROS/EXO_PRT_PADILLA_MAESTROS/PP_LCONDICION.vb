@@ -81,7 +81,7 @@ Public Class PP_LCONDICION
                         Select Case infoEvento.EventType
 
                             Case SAPbouiCOM.BoEventTypes.et_FORM_DATA_LOAD
-
+                                Borra_lin_vacia(oForm)
                             Case SAPbouiCOM.BoEventTypes.et_FORM_DATA_UPDATE
                                 Borra_lin_vacia(oForm)
                             Case SAPbouiCOM.BoEventTypes.et_FORM_DATA_ADD
@@ -473,6 +473,7 @@ Public Class PP_LCONDICION
                     objGlobal.SBOApp.StatusBar.SetText("(EXO) - Cargando datos de la línea...", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Warning)
                     sCod = oForm.DataSources.DBDataSources.Item("@PP_LCONDICIONL").GetValue("U_PP_MCONDICION", Row - 1)
                     sValorMatrix = oForm.DataSources.DBDataSources.Item("@PP_LCONDICIONL").GetValue("U_PP_VALOR", Row - 1)
+                    oForm.DataSources.UserDataSources.Item("UDVALORD").ValueEx = oForm.DataSources.DBDataSources.Item("@PP_LCONDICIONL").GetValue("U_PP_VALORD", Row - 1)
                     oForm.DataSources.UserDataSources.Item("UDVMAT").ValueEx = sValorMatrix
                     oForm.DataSources.UserDataSources.Item("UDCCOND").ValueEx = sCod
                     'Buscamos el nombre para introducirlo en el campo
