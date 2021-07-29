@@ -1,0 +1,19 @@
+﻿<Application>
+  <Menus>
+    <action type="add">
+        <Menu Checked="0" Enabled="1" FatherUID="PP-CFG-200" Image="" String="Condiciones" Type="2" UniqueID="PP-MCNDS"></Menu>
+            <Menu Checked="0" Enabled="1" FatherUID="PP-MCNDS" Image="" String="Operadores de condiciones" Type="1" UniqueID="PP-MnCND"></Menu>
+            <Menu Checked="0" Enabled="1" FatherUID="PP-MCNDS" Image="" String="Maestro de campos de condición" Type="1" UniqueID="PP-MnMCND"></Menu>
+            <Menu Checked="0" Enabled="1" FatherUID="PP-MCNDS" Image="" String="Lista de Condiciones" Type="1" UniqueID="PP-MnLCND"></Menu>
+        <Menu Checked="0" Enabled="1" FatherUID="PP-CFG-226" Image="" String="Fragmentos" Type="2" UniqueID="PP-MFRG"></Menu>
+            <Menu Checked="0" Enabled="1" FatherUID="PP-MFRG" Image="" String="Fragmentos" Type="1" UniqueID="PP-MnMFRG"></Menu>
+            <!--<Menu Checked="0" Enabled="1" FatherUID="PP-MFRG" Image="" String="Cargar fichero Fragmentos" Type="1" UniqueID="PP-MnCFRG"></Menu>-->
+            <Menu Checked="0" Enabled="1" FatherUID="PP-MFRG" Image="" String="Relación con condiciones" Type="2" UniqueID="PP-MnRCND"></Menu>
+               <Menu Checked="0" Enabled="1" FatherUID="PP-MnRCND" Image="" String="Condiciones y Fragmentos" Type="1" UniqueID="PP-MnCYF"></Menu>
+                <!--<Menu Checked="0" Enabled="1" FatherUID="PP-MnRCND" Image="" String="Usos" Type="1" UniqueID="PP-MnRCUSOS"></Menu>
+                <Menu Checked="0" Enabled="1" FatherUID="PP-MnRCND" Image="" String="Rellenos" Type="1" UniqueID="PP-MnRCRELL"></Menu>
+                <Menu Checked="0" Enabled="1" FatherUID="PP-MnRCND" Image="" String="Chapas" Type="1" UniqueID="PP-MnRCCHA"></Menu>
+                <Menu Checked="0" Enabled="1" FatherUID="PP-MnRCND" Image="" String="Marcos" Type="1" UniqueID="PP-MnRCMAR"></Menu>-->
+    </action>
+  </Menus>
+</Application>
