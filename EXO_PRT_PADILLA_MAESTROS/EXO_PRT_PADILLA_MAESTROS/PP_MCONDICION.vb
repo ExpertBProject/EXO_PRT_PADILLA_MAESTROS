@@ -46,6 +46,11 @@ Public Class PP_MCONDICION
 
         Try
             If infoEvento.BeforeAction = True Then
+                Select Case infoEvento.MenuUID
+                    Case "1281", "1282"
+                        objGlobal.SBOApp.Forms.ActiveForm.Items.Item("0_U_E").SetAutoManagedAttribute(BoAutoManagedAttr.ama_Editable, -1, BoModeVisualBehavior.mvb_True)
+                End Select
+
 
             Else
 
@@ -98,6 +103,25 @@ Public Class PP_MCONDICION
                             Case SAPbouiCOM.BoEventTypes.et_FORM_DATA_LOAD
                                 If oForm.Visible = True Then
                                     Dim sUDO As String = "" : Dim sTabla As String = "" : Dim sSQL As String = ""
+
+                                    If oForm.Mode <> BoFormMode.fm_ADD_MODE Then
+                                        oForm.Items.Item("0_U_E").SetAutoManagedAttribute(BoAutoManagedAttr.ama_Editable, -1, BoModeVisualBehavior.mvb_False)
+                                    Else
+                                        oForm.Items.Item("0_U_E").SetAutoManagedAttribute(BoAutoManagedAttr.ama_Editable, -1, BoModeVisualBehavior.mvb_True)
+                                    End If
+
+                                    With oForm.DataSources.DBDataSources.Item("@PP_MCONDICION")
+                                        sSQL = "SELECT ""COLUMN_NAME"", ""COLUMN_NAME"" ""Descripción"" FROM TABLE_COLUMNS WHERE ""TABLE_NAME""='@" & .GetValue("U_PP_TCONF", .Offset).Trim & "' and ""SCHEMA_NAME""='" & objGlobal.compañia.CompanyDB & "' "
+                                        sSQL &= " And ""COLUMN_NAME"" in ('Code', 'DocEntry', 'DocNum')  "
+                                        sSQL &= " UNION ALL "
+                                        sSQL &= "SELECT Concat('U_',""AliasID"") ""AliasID"",Concat(Concat(""AliasID"",' - '),""Descr"") ""Descripción"" "
+                                        sSQL &= " From ""CUFD"" Where ""TableID""='@" & .GetValue("U_PP_TCONF", .Offset).Trim & "' "
+                                    End With
+                                    PP_UTILITIES.EO.Formularios.MyFormFunctions.Init_Combo(objGlobal, oForm, "16_U_C", sSQL)
+
+                                    'SELECT T0."TableName", T0."Descr" FROM OUTB T0 WHERE T0."TableName" LIKE 'PP_OITM%'
+                                    'PP_UTILITIES.EO.Formularios.MyFormFunctions.Init_Combo(objGlobal, oForm, "", "")
+
                                     sUDO = CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).Selected.Value.ToString
                                         sSQL = "SELECT ""TableName"" FROM ""OUDO"" WHERE ""Code""='" & sUDO & "' "
                                         sTabla = objGlobal.refDi.SQL.sqlStringB1(sSQL)
@@ -254,6 +278,16 @@ Public Class PP_MCONDICION
         Try
             oForm = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
             If oForm.Visible = True Then
+                If pVal.ItemChanged And pVal.ItemUID = "19" Then
+                    With oForm.DataSources.DBDataSources.Item("@PP_MCONDICION")
+                        sSQL = "SELECT ""COLUMN_NAME"", ""COLUMN_NAME"" ""Descripción"" FROM TABLE_COLUMNS WHERE ""TABLE_NAME""='@" & .GetValue("U_PP_TCONF", .Offset).Trim & "' and ""SCHEMA_NAME""='" & objGlobal.compañia.CompanyDB & "' "
+                        sSQL &= " And ""COLUMN_NAME"" in ('Code', 'DocEntry', 'DocNum')  "
+                        sSQL &= " UNION ALL "
+                        sSQL &= "SELECT Concat('U_',""AliasID"") ""AliasID"",Concat(Concat(""AliasID"",' - '),""Descr"") ""Descripción"" "
+                        sSQL &= " From ""CUFD"" Where ""TableID""='@" & .GetValue("U_PP_TCONF", .Offset).Trim & "' "
+                    End With
+                    PP_UTILITIES.EO.Formularios.MyFormFunctions.Init_Combo(objGlobal, oForm, "16_U_C", sSQL)
+                End If
                 If pVal.ItemUID = "13_U_C" Then
                     sUDO = CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).Selected.Value.ToString
                     sSQL = "SELECT ""TableName"" FROM ""OUDO"" WHERE ""Code""='" & sUDO & "' "
@@ -268,18 +302,21 @@ Public Class PP_MCONDICION
                     objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("15_U_C").Specific, SAPbouiCOM.ComboBox).ValidValues, sSQL)
                     CType(oForm.Items.Item("15_U_C").Specific, SAPbouiCOM.ComboBox).ExpandType = BoExpandType.et_ValueDescription
 
-                    sSQL = "SELECT ""COLUMN_NAME"", ""COLUMN_NAME"" ""Descripción"" FROM TABLE_COLUMNS WHERE ""TABLE_NAME""='@PP_OITM' and ""SCHEMA_NAME""='" & objGlobal.compañia.CompanyDB & "' "
-                    sSQL &= " And ""COLUMN_NAME"" in ('Code', 'DocEntry', 'DocNum')  "
-                    sSQL &= " UNION ALL "
-                    sSQL &= "SELECT Concat('U_',""AliasID"") ""AliasID"",Concat(Concat(""AliasID"",' - '),""Descr"") ""Descripción"" "
-                    sSQL &= " From ""CUFD"" Where ""TableID""='@PP_OITM' "
-                    objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("16_U_C").Specific, SAPbouiCOM.ComboBox).ValidValues, sSQL)
-                    CType(oForm.Items.Item("16_U_C").Specific, SAPbouiCOM.ComboBox).ExpandType = BoExpandType.et_ValueDescription
+                    'sSQL = "SELECT ""COLUMN_NAME"", ""COLUMN_NAME"" ""Descripción"" FROM TABLE_COLUMNS WHERE ""TABLE_NAME""='@PP_OITM' and ""SCHEMA_NAME""='" & objGlobal.compañia.CompanyDB & "' "
+                    'sSQL &= " And ""COLUMN_NAME"" in ('Code', 'DocEntry', 'DocNum')  "
+                    'sSQL &= " UNION ALL "
+                    'sSQL &= "SELECT Concat('U_',""AliasID"") ""AliasID"",Concat(Concat(""AliasID"",' - '),""Descr"") ""Descripción"" "
+                    'sSQL &= " From ""CUFD"" Where ""TableID""='@PP_OITM' "
+                    'objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("16_U_C").Specific, SAPbouiCOM.ComboBox).ValidValues, sSQL)
+                    'CType(oForm.Items.Item("16_U_C").Specific, SAPbouiCOM.ComboBox).ExpandType = BoExpandType.et_ValueDescription
                 ElseIf pVal.ItemUID = "16_U_C" Then
                     Dim sValor As String = ""
                     oBOB = CType(objGlobal.compañia.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoBridge), SAPbobsCOM.SBObob)
                     'Buscamos campos de la tabla
-                    oRs = oBOB.GetTableFieldList("@PP_OITM")
+                    With oForm.DataSources.DBDataSources.Item("@PP_MCONDICION")
+                        oRs = oBOB.GetTableFieldList("@" & .GetValue("U_PP_TCONF", .Offset).Trim)
+                    End With
+
                     If CType(oForm.Items.Item("16_U_C").Specific, SAPbouiCOM.ComboBox).Selected IsNot Nothing Then
                         sValor = CType(oForm.Items.Item("16_U_C").Specific, SAPbouiCOM.ComboBox).Selected.Value
                     End If
@@ -338,6 +375,13 @@ Public Class PP_MCONDICION
                 sSQL = "SELECT T0.""Code"", T0.""Name"" FROM ""OUDO"" T0 ORDER BY T0.""Name"" "
                 objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).ValidValues, sSQL)
                 CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).ExpandType = BoExpandType.et_ValueDescription
+                If oForm.Mode <> BoFormMode.fm_ADD_MODE Then
+                    oForm.Items.Item("0_U_E").SetAutoManagedAttribute(BoAutoManagedAttr.ama_Editable, -1, BoModeVisualBehavior.mvb_False)
+                Else
+                    oForm.Items.Item("0_U_E").SetAutoManagedAttribute(BoAutoManagedAttr.ama_Editable, -1, BoModeVisualBehavior.mvb_True)
+                End If
+
+                PP_UTILITIES.EO.Formularios.MyFormFunctions.Init_Combo(objGlobal, oForm, "19", "SELECT T0.""TableName"", T0.""Descr"" FROM OUTB T0 WHERE T0.""TableName"" LIKE 'PP_OITM%'")
 
             End If
 

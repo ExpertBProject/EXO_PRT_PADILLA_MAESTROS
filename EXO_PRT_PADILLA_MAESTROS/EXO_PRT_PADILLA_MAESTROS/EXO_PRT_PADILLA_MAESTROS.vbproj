@@ -74,31 +74,37 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EPPlus">
-      <HintPath>..\..\..\EXO_Kernel_10.0.1.3\ClienteLigeroWeb\x64Client\EPPlus.dll</HintPath>
+      <HintPath>..\..\..\..\..\Desarrollo\10.0.0.0\x64\EPPlus.dll</HintPath>
     </Reference>
-    <Reference Include="EXO_BasicDLL, Version=10.0.1.3, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\EXO_Kernel_10.0.1.3\x64\desarrollo\EXO_BasicDLL.dll</HintPath>
+    <Reference Include="EXOCryptorLib">
+      <HintPath>..\..\..\..\..\Desarrollo\10.0.0.0\x64\EXOCryptorLib.dll</HintPath>
     </Reference>
-    <Reference Include="EXO_CleanCOM, Version=10.0.1.3, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\EXO_Kernel_10.0.1.3\x64\desarrollo\EXO_CleanCOM.dll</HintPath>
+    <Reference Include="EXO_BasicDLL">
+      <HintPath>..\..\..\..\..\Desarrollo\10.0.0.0\x64\EXO_BasicDLL.dll</HintPath>
     </Reference>
-    <Reference Include="EXO_DIAPI, Version=10.0.1.3, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\EXO_Kernel_10.0.1.3\x64\desarrollo\EXO_DIAPI.dll</HintPath>
+    <Reference Include="EXO_CleanCOM">
+      <HintPath>..\..\..\..\..\Desarrollo\10.0.0.0\x64\EXO_CleanCOM.dll</HintPath>
     </Reference>
-    <Reference Include="EXO_Generales, Version=10.0.1.3, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\EXO_Kernel_10.0.1.3\x64\desarrollo\EXO_Generales.dll</HintPath>
+    <Reference Include="EXO_Comunes">
+      <HintPath>..\..\..\..\..\Desarrollo\10.0.0.0\x64\EXO_Comunes.dll</HintPath>
     </Reference>
-    <Reference Include="EXO_Log, Version=10.0.1.3, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\EXO_Kernel_10.0.1.3\x64\desarrollo\EXO_Log.dll</HintPath>
+    <Reference Include="EXO_CryptorLib">
+      <HintPath>..\..\..\..\..\Desarrollo\10.0.0.0\x64\EXO_CryptorLib.dll</HintPath>
     </Reference>
-    <Reference Include="EXO_UIAPI, Version=10.0.1.3, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\EXO_Kernel_10.0.1.3\x64\desarrollo\EXO_UIAPI.dll</HintPath>
+    <Reference Include="EXO_DIAPI">
+      <HintPath>..\..\..\..\..\Desarrollo\10.0.0.0\x64\EXO_DIAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="EXO_Generales">
+      <HintPath>..\..\..\..\..\Desarrollo\10.0.0.0\x64\EXO_Generales.dll</HintPath>
+    </Reference>
+    <Reference Include="EXO_Log">
+      <HintPath>..\..\..\..\..\Desarrollo\10.0.0.0\x64\EXO_Log.dll</HintPath>
+    </Reference>
+    <Reference Include="EXO_SQLIndependiente">
+      <HintPath>..\..\..\..\..\Desarrollo\10.0.0.0\x64\EXO_SQLIndependiente.dll</HintPath>
+    </Reference>
+    <Reference Include="EXO_UIAPI">
+      <HintPath>..\..\..\..\..\Desarrollo\10.0.0.0\x64\EXO_UIAPI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -188,7 +194,7 @@
       <Lcid>0</Lcid>
       <WrapperTool>tlbimp</WrapperTool>
       <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </COMReference>
     <COMReference Include="SAPbouiCOM">
       <Guid>{6048236A-956D-498D-A6F1-9C81C13AB6E8}</Guid>
@@ -197,7 +203,7 @@
       <Lcid>0</Lcid>
       <WrapperTool>tlbimp</WrapperTool>
       <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
   <ItemGroup>
@@ -239,11 +245,16 @@
   <ItemGroup>
     <EmbeddedResource Include="01.XML\05.Screens\LIST_PP_LCONDICION.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\PP_UTILITIES\Ficheros\PP_UTILITIES.vbproj">
+      <Project>{6604107e-324a-4ec7-a73b-c3b7fd3b96cd}</Project>
+      <Name>PP_UTILITIES</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "E:\Desarrollo\Ficheros\10.Dll_64\EXT\$(TargetFileName)"
-copy "$(TargetPath)" "E:\Desarrollo\EXO_Kernel_10.0.1.3\x64\desarrollo\DLLs\$(TargetFileName)"
-copy "$(TargetPath)" "E:\Desarrollo\Usuarios\omartinez\PPADILLA\EXO_Kernel_10.0.1.3\x64\desarrollo\DLLs\$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent>copy $(TargetPath) "C:\Desarrollo\10.0.0.0\x64\DLLs\$(TargetFileName)"
+copy $(TargetPath) "C:\Desarrollo\Ficheros\10.Dll_64\EXT\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

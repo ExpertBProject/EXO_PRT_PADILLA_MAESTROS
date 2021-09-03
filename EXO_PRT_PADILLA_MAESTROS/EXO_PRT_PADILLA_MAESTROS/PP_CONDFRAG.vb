@@ -451,6 +451,11 @@ Public Class PP_CONDFRAG
         Try
             oForm = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
             If oForm.Visible = True Then
+                If oForm.Mode <> BoFormMode.fm_ADD_MODE Then
+                    oForm.Items.Item("0_U_E").SetAutoManagedAttribute(BoAutoManagedAttr.ama_Editable, -1, BoModeVisualBehavior.mvb_False)
+                Else
+                    oForm.Items.Item("0_U_E").SetAutoManagedAttribute(BoAutoManagedAttr.ama_Editable, -1, BoModeVisualBehavior.mvb_True)
+                End If
                 sSQL = "SELECT ""Code"",""Name"" From ""@PP_MCONDICION""  "
                 objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("14_U_Cb").Specific, SAPbouiCOM.ComboBox).ValidValues, sSQL)
             End If

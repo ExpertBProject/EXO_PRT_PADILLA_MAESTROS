@@ -323,6 +323,12 @@ Public Class PP_LCONDICION
                 objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_2").ValidValues, sSQL)
                 objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("cbCOND").Specific, SAPbouiCOM.ComboBox).ValidValues, sSQL)
 
+
+                If oForm.Mode <> BoFormMode.fm_ADD_MODE Then
+                    oForm.Items.Item("0_U_E").SetAutoManagedAttribute(BoAutoManagedAttr.ama_Editable, -1, BoModeVisualBehavior.mvb_False)
+                Else
+                    oForm.Items.Item("0_U_E").SetAutoManagedAttribute(BoAutoManagedAttr.ama_Editable, -1, BoModeVisualBehavior.mvb_True)
+                End If
                 Mostrar_Ocultar(False, oForm)
             End If
 
@@ -724,11 +730,19 @@ Public Class PP_LCONDICION
                 If oDataTable IsNot Nothing Then
                     Try
                         sCod = oDataTable.SelectedObjects.GetValue("Code", 0).ToString
-                        sDes = oDataTable.SelectedObjects.GetValue("Name", 0).ToString
                     Catch ex As Exception
                         sCod = oDataTable.SelectedObjects.GetValue("DocEntry", 0).ToString
-                        sDes = oDataTable.SelectedObjects.GetValue("U_PP_NAME", 0).ToString
                     End Try
+                    Try
+                        sDes = oDataTable.SelectedObjects.GetValue("Name", 0).ToString
+                    Catch ex As Exception
+                        Try
+                            sDes = oDataTable.SelectedObjects.GetValue("U_PP_NAME", 0).ToString
+                        Catch ex2 As Exception
+                            sDes = oDataTable.SelectedObjects.GetValue("U_PP_NOMBRE", 0).ToString
+                        End Try
+                    End Try
+
                     oForm.DataSources.UserDataSources.Item("UDVALORT").ValueEx = sCod
 
                     If CType(oForm.Items.Item("cbCOND").Specific, SAPbouiCOM.ComboBox).Selected.Value.Trim = "LIST" Or CType(oForm.Items.Item("cbCOND").Specific, SAPbouiCOM.ComboBox).Selected.Value.Trim = "NOTLIST" Then

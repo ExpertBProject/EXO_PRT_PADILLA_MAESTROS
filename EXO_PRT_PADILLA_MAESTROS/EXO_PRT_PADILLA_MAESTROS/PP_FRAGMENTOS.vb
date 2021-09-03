@@ -1,4 +1,5 @@
-﻿Imports System.Xml
+﻿Imports System.Reflection
+Imports System.Xml
 Imports SAPbouiCOM
 
 Public Class PP_FRAGMENTOS
@@ -105,19 +106,21 @@ Public Class PP_FRAGMENTOS
 
                             Case SAPbouiCOM.BoEventTypes.et_FORM_DATA_LOAD
                                 If oForm.Visible = True Then
-                                    If CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).Selected IsNot Nothing Then
-                                        Dim sSQL As String = ""
-                                        Dim sTipo As String = CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).Selected.Value.ToString
-                                        sSQL = "SELECT DISTINCT ""AbsEntry"", ""Code""  FROM ""ORST"" WHERE ""U_PP_TLIN""='O' and ""U_PP_TIPO""='" & sTipo & "' Order BY ""AbsEntry"" "
-                                        objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_1").ValidValues, sSQL)
-                                    End If
-                                    For i = 1 To CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).RowCount
-                                        If CType(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_5").Cells.Item(i).Specific, SAPbouiCOM.CheckBox).Checked = True Then
-                                            CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).CommonSetting.SetCellEditable(i, 6, True)
-                                        Else
-                                            CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).CommonSetting.SetCellEditable(i, 6, False)
-                                        End If
-                                    Next
+                                    'If CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).Selected IsNot Nothing Then
+                                    '    Dim sSQL As String = ""
+                                    '    Dim sTipo As String = CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).Selected.Value.ToString
+                                    '    sSQL = "SELECT DISTINCT ""AbsEntry"", ""Code""  FROM ""ORST"" WHERE ""U_PP_TLIN""='O' and ""U_PP_TIPO""='" & sTipo & "' Order BY ""AbsEntry"" "
+                                    '    objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_1").ValidValues, sSQL)
+                                    'End If
+                                    CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_5").Visible = False
+                                    CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_6").Visible = False
+                                    'For i = 1 To CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).RowCount
+                                    '    If CType(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_5").Cells.Item(i).Specific, SAPbouiCOM.CheckBox).Checked = True Then
+                                    '        CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).CommonSetting.SetCellEditable(i, 6, True)
+                                    '    Else
+                                    '        CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).CommonSetting.SetCellEditable(i, 6, False)
+                                    '    End If
+                                    'Next
                                 End If
                             Case SAPbouiCOM.BoEventTypes.et_FORM_DATA_UPDATE
 
@@ -152,10 +155,10 @@ Public Class PP_FRAGMENTOS
                         Case "UDO_FT_PP_FRAGMENTOS"
                             Select Case infoEvento.EventType
                                 Case SAPbouiCOM.BoEventTypes.et_COMBO_SELECT
-                                    If EventHandler_COMBO_SELECT_After(infoEvento) = False Then
-                                        GC.Collect()
-                                        Return False
-                                    End If
+                                    'If EventHandler_COMBO_SELECT_After(infoEvento) = False Then
+                                    '    GC.Collect()
+                                    '    Return False
+                                    'End If
                                 Case SAPbouiCOM.BoEventTypes.et_ITEM_PRESSED
                                     If EventHandler_ItemPressed_After(infoEvento) = False Then
                                         Return False
@@ -183,7 +186,10 @@ Public Class PP_FRAGMENTOS
                                 Case SAPbouiCOM.BoEventTypes.et_CLICK
 
                                 Case SAPbouiCOM.BoEventTypes.et_ITEM_PRESSED
-
+                                Case SAPbouiCOM.BoEventTypes.et_ITEM_PRESSED
+                                    If EventHandler_ItemPressed_Before(infoEvento) = False Then
+                                        Return False
+                                    End If
                                 Case SAPbouiCOM.BoEventTypes.et_VALIDATE
 
                                 Case SAPbouiCOM.BoEventTypes.et_KEY_DOWN
@@ -221,7 +227,10 @@ Public Class PP_FRAGMENTOS
                         Case "UDO_FT_PP_FRAGMENTOS"
                             Select Case infoEvento.EventType
                                 Case SAPbouiCOM.BoEventTypes.et_CHOOSE_FROM_LIST
-
+                                    If EventHandler_Choose_FromList_Before(infoEvento) = False Then
+                                        GC.Collect()
+                                        Return False
+                                    End If
                                 Case SAPbouiCOM.BoEventTypes.et_PICKER_CLICKED
 
                                 Case SAPbouiCOM.BoEventTypes.et_FORM_LOAD
@@ -247,39 +256,39 @@ Public Class PP_FRAGMENTOS
             Return False
         End Try
     End Function
-    Private Function EventHandler_COMBO_SELECT_After(ByRef pVal As ItemEvent) As Boolean
-        Dim oForm As SAPbouiCOM.Form = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
-        Dim sSQL As String = ""
-        EventHandler_COMBO_SELECT_After = False
-        Try
+    'Private Function EventHandler_COMBO_SELECT_After(ByRef pVal As ItemEvent) As Boolean
+    '    Dim oForm As SAPbouiCOM.Form = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
+    '    Dim sSQL As String = ""
+    '    EventHandler_COMBO_SELECT_After = False
+    '    Try
 
-            If pVal.ItemUID = "0_U_G" And pVal.ColUID = "C_0_1" Then
-                Dim iRegistros As Integer = oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").Size
-                Dim iRegActivo As Integer = oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").Offset + 1
-                If iRegistros = iRegActivo Then
-                    CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).AddRow()
-                    CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).ClearRowData(iRegActivo + 1)
-                    CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).FlushToDataSource()
-                End If
+    '        If pVal.ItemUID = "0_U_G" And pVal.ColUID = "C_0_1" Then
+    '            Dim iRegistros As Integer = oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").Size
+    '            Dim iRegActivo As Integer = oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").Offset + 1
+    '            If iRegistros = iRegActivo Then
+    '                CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).AddRow()
+    '                CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).ClearRowData(iRegActivo + 1)
+    '                CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).FlushToDataSource()
+    '            End If
 
-            ElseIf pVal.ItemUID = "13_U_C" Then
-                If CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).Selected IsNot Nothing Then
-                    Dim sTipo As String = CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).Selected.Value.ToString
-                    sSQL = "SELECT DISTINCT ""AbsEntry"", ""Code""  FROM ""ORST"" WHERE ""U_PP_TLIN""='O' and ""U_PP_TIPO""='" & sTipo & "' Order BY ""AbsEntry"" "
-                    objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_1").ValidValues, sSQL)
-                End If
-            End If
+    '        ElseIf pVal.ItemUID = "13_U_C" Then
+    '            If CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).Selected IsNot Nothing Then
+    '                Dim sTipo As String = CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).Selected.Value.ToString
+    '                sSQL = "SELECT DISTINCT ""AbsEntry"", ""Code""  FROM ""ORST"" WHERE ""U_PP_TLIN""='O' and ""U_PP_TIPO""='" & sTipo & "' Order BY ""AbsEntry"" "
+    '                objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_1").ValidValues, sSQL)
+    '            End If
+    '        End If
 
-            EventHandler_COMBO_SELECT_After = True
+    '        EventHandler_COMBO_SELECT_After = True
 
-        Catch exCOM As System.Runtime.InteropServices.COMException
-            objGlobal.Mostrar_Error(exCOM, EXO_UIAPI.EXO_UIAPI.EXO_TipoMensaje.Excepcion)
-        Catch ex As Exception
-            objGlobal.Mostrar_Error(ex, EXO_UIAPI.EXO_UIAPI.EXO_TipoMensaje.Excepcion)
-        Finally
-            EXO_CleanCOM.CLiberaCOM.liberaCOM(CType(oForm, Object))
-        End Try
-    End Function
+    '    Catch exCOM As System.Runtime.InteropServices.COMException
+    '        objGlobal.Mostrar_Error(exCOM, EXO_UIAPI.EXO_UIAPI.EXO_TipoMensaje.Excepcion)
+    '    Catch ex As Exception
+    '        objGlobal.Mostrar_Error(ex, EXO_UIAPI.EXO_UIAPI.EXO_TipoMensaje.Excepcion)
+    '    Finally
+    '        EXO_CleanCOM.CLiberaCOM.liberaCOM(CType(oForm, Object))
+    '    End Try
+    'End Function
     Private Function EventHandler_Choose_FromList_After(ByRef pVal As ItemEvent) As Boolean
         Dim oForm As SAPbouiCOM.Form = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
 
@@ -291,43 +300,71 @@ Public Class PP_FRAGMENTOS
                 If oDataTable IsNot Nothing Then
                     Try
                         Select Case oForm.ChooseFromLists.Item(oDataTable.ChooseFromListUID).ObjectType
-                            Case "PP_FRAGMENTOS"
-                                Try
-                                    sCod = oDataTable.SelectedObjects.GetValue("ItemCode", 0).ToString
-                                    sDes = oDataTable.SelectedObjects.GetValue("ItemName", 0).ToString
-
-                                    'oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_CODART", oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").Offset, sCod)
-                                    'Try
-                                    '    oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_DESART", oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").Offset, sDes)
-                                    'Catch ex As Exception
-
-                                    'End Try
-
-                                    Try
-                                        oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_CODART", pVal.Row - 1, sCod)
-                                        oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_DESART", pVal.Row - 1, sDes)
-                                        'CType(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_3").Cells.Item(pVal.Row).Specific, SAPbouiCOM.EditText).Value = sDes
-                                    Catch ex As Exception
-
-                                    End Try
-
-                                Catch ex As Exception
-                                    oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_CODART", pVal.Row - 1, sCod)
-                                    oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_DESART", pVal.Row - 1, sDes)
-                                End Try
+                            Case "PP_OPERACION"
+                                With oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL")
+                                    .SetValue("U_PP_CODOP", pVal.Row - 1, oDataTable.SelectedObjects.GetValue("DocEntry", 0).ToString)
+                                    .SetValue("U_PP_DOPE", pVal.Row - 1, oDataTable.SelectedObjects.GetValue("U_PP_CODE", 0).ToString)
+                                End With
+                                CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).LoadFromDataSourceEx(False)
+                                AddNewLine(oForm, True)
+                                If oForm.Mode = BoFormMode.fm_OK_MODE Then oForm.Mode = BoFormMode.fm_UPDATE_MODE
+                            Case "PP_CENTROS"
+                                With oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL")
+                                    .SetValue("U_PP_CENT", pVal.Row - 1, oDataTable.SelectedObjects.GetValue("DocEntry", 0).ToString)
+                                    .SetValue("U_PP_DENT", pVal.Row - 1, oDataTable.SelectedObjects.GetValue("U_PP_NAME", 0).ToString)
+                                End With
+                                CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).LoadFromDataSourceEx(False)
+                                If oForm.Mode = BoFormMode.fm_OK_MODE Then oForm.Mode = BoFormMode.fm_UPDATE_MODE
                             Case "4"
-                                Try
-                                    sCod = oDataTable.SelectedObjects.GetValue("ItemCode", 0).ToString
-                                    sDes = oDataTable.SelectedObjects.GetValue("ItemName", 0).ToString
+                                With oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL")
+                                    .SetValue("U_PP_ITEM", pVal.Row - 1, oDataTable.SelectedObjects.GetValue("ItemCode", 0).ToString)
+                                    .SetValue("U_PP_NITE", pVal.Row - 1, oDataTable.SelectedObjects.GetValue("ItemName", 0).ToString)
+                                End With
+                                CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).LoadFromDataSourceEx(False)
+                                If oForm.Mode = BoFormMode.fm_OK_MODE Then oForm.Mode = BoFormMode.fm_UPDATE_MODE
 
-                                    oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_CODART", pVal.Row - 1, sCod)
-                                    oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_DESART", pVal.Row - 1, sDes)
-                                Catch ex As Exception
-                                    oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_CODART", pVal.Row - 1, sCod)
-                                    oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_DESART", pVal.Row - 1, sDes)
-                                End Try
+                                'Case "PP_FRAGMENTOS"
+                                '    Try
+                                '        sCod = oDataTable.SelectedObjects.GetValue("ItemCode", 0).ToString
+                                '        sDes = oDataTable.SelectedObjects.GetValue("ItemName", 0).ToString
+
+                                '        'oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_CODART", oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").Offset, sCod)
+                                '        'Try
+                                '        '    oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_DESART", oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").Offset, sDes)
+                                '        'Catch ex As Exception
+
+                                '        'End Try
+
+                                '        Try
+                                '            oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_CODART", pVal.Row - 1, sCod)
+                                '            oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_DESART", pVal.Row - 1, sDes)
+                                '            CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).LoadFromDataSourceEx(False)
+                                '            'CType(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_3").Cells.Item(pVal.Row).Specific, SAPbouiCOM.EditText).Value = sDes
+                                '        Catch ex As Exception
+
+                                '        End Try
+
+                                '    Catch ex As Exception
+                                '        oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_CODART", pVal.Row - 1, sCod)
+                                '        oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_DESART", pVal.Row - 1, sDes)
+                                '        CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).LoadFromDataSourceEx(False)
+                                '    End Try
+                                'Case "4"
+                                '    Try
+                                '        sCod = oDataTable.SelectedObjects.GetValue("ItemCode", 0).ToString
+                                '        sDes = oDataTable.SelectedObjects.GetValue("ItemName", 0).ToString
+
+                                '        oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_CODART", pVal.Row - 1, sCod)
+                                '        oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_DESART", pVal.Row - 1, sDes)
+                                '        CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).LoadFromDataSourceEx(False)
+
+                                '    Catch ex As Exception
+                                '        oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_CODART", pVal.Row - 1, sCod)
+                                '        oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL").SetValue("U_PP_DESART", pVal.Row - 1, sDes)
+                                '        CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).LoadFromDataSourceEx(False)
+                                '    End Try
                         End Select
-                        If oForm.Mode = BoFormMode.fm_OK_MODE Then oForm.Mode = BoFormMode.fm_UPDATE_MODE
+                        'If oForm.Mode = BoFormMode.fm_OK_MODE Then oForm.Mode = BoFormMode.fm_UPDATE_MODE
                     Catch ex As Exception
                         Throw ex
                     End Try
@@ -344,6 +381,94 @@ Public Class PP_FRAGMENTOS
             EXO_CleanCOM.CLiberaCOM.liberaCOM(CType(oForm, Object))
         End Try
     End Function
+    Private Function EventHandler_Choose_FromList_Before(ByRef pVal As ItemEvent) As Boolean
+        Dim oForm As SAPbouiCOM.Form = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
+        Dim oConds As SAPbouiCOM.Conditions = Nothing
+        Dim oCond As SAPbouiCOM.Condition = Nothing
+        Dim oCFLEvento As SAPbouiCOM.IChooseFromListEvent = Nothing
+        EventHandler_Choose_FromList_Before = False
+        Dim sCod As String = "" : Dim sDes As String = ""
+        Try
+
+            oCFLEvento = CType(pVal, SAPbouiCOM.IChooseFromListEvent)
+
+            Select Case oForm.ChooseFromLists.Item(oCFLEvento.ChooseFromListUID).ObjectType
+                Case "PP_OPERACION"
+                    oConds = New SAPbouiCOM.Conditions
+                    oCond = oConds.Add
+                    oCond.Alias = "U_PP_ACTIVO"
+                    oCond.Operation = BoConditionOperation.co_EQUAL
+                    oCond.CondVal = "Y"
+
+                Case "PP_CENTROS"
+                    Dim oRs As SAPbobsCOM.Recordset = Nothing
+                    oRs = CType(objGlobal.compañia.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset), SAPbobsCOM.Recordset)
+                    With oForm.DataSources.DBDataSources.Item("@PP_FRAGMENTOSL")
+                        If .GetValue("U_PP_DOPE", pVal.Row - 1).ToString = "" Then
+                            oConds = New SAPbouiCOM.Conditions
+                            oCond = oConds.Add
+                            oCond.Alias = "DocEntry"
+                            oCond.Operation = BoConditionOperation.co_EQUAL
+                            oCond.CondVal = "-1"
+                        Else
+                            oRs.DoQuery("SELECT T1.""U_PP_ID"" FROM ""@PP_OPERACION"" T0 INNER JOIN ""@PP_OPERACION_C"" T1 ON T0.""DocEntry"" = T1.""DocEntry""
+                        WHERE T0.""DocEntry"" =" & .GetValue("U_PP_CODOP", pVal.Row - 1).ToString)
+                            If oRs.RecordCount > 0 Then
+                                oConds = New SAPbouiCOM.Conditions
+                                While oRs.EoF = False
+                                    If oConds.Count > 0 Then
+                                        oCond.Relationship = BoConditionRelationship.cr_OR
+                                    End If
+                                    oCond = oConds.Add
+                                    oCond.Alias = "DocEntry"
+                                    oCond.Operation = BoConditionOperation.co_EQUAL
+                                    oCond.CondVal = oRs.Fields.Item(0).Value.ToString
+                                    oRs.MoveNext()
+                                End While
+                            Else
+                                oConds = New SAPbouiCOM.Conditions
+                                oCond = oConds.Add
+                                oCond.Alias = "DocEntry"
+                                oCond.Operation = BoConditionOperation.co_EQUAL
+                                oCond.CondVal = "-1"
+                            End If
+                        End If
+                    End With
+
+                Case "4"
+                    oConds = New SAPbouiCOM.Conditions
+                    oCond = oConds.Add
+                    oCond.Alias = "frozenFor"
+                    oCond.Operation = BoConditionOperation.co_EQUAL
+                    oCond.CondVal = "N"
+                    'Resto
+                    'Case Else
+                    '    oConds = New SAPbouiCOM.Conditions
+                    '    oCond = oConds.Add
+                    '    oCond.Alias = "U_PP_ACTIVO"
+                    '    oCond.Operation = BoConditionOperation.co_EQUAL
+                    '    oCond.CondVal = "Y"
+            End Select
+            'CType(oForm.Items.Item(Replace(NOMBRE_MATRIX, "X", (oForm.PaneLevel - 1).ToString)).Specific, SAPbouiCOM.Matrix).FlushToDataSource()
+            CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).FlushToDataSource()
+            If Not oConds Is Nothing Then
+                oForm.ChooseFromLists.Item(oCFLEvento.ChooseFromListUID).SetConditions(oConds)
+            Else
+                oConds = New SAPbouiCOM.Conditions
+                oForm.ChooseFromLists.Item(oCFLEvento.ChooseFromListUID).SetConditions(oConds)
+            End If
+            EventHandler_Choose_FromList_Before = True
+
+        Catch exCOM As System.Runtime.InteropServices.COMException
+            objGlobal.Mostrar_Error(exCOM, EXO_UIAPI.EXO_UIAPI.EXO_TipoMensaje.Excepcion)
+        Catch ex As Exception
+            objGlobal.Mostrar_Error(ex, EXO_UIAPI.EXO_UIAPI.EXO_TipoMensaje.Excepcion)
+        Finally
+            EXO_CleanCOM.CLiberaCOM.liberaCOM(CType(oForm, Object))
+            EXO_CleanCOM.CLiberaCOM.FormCondition(oCond)
+            EXO_CleanCOM.CLiberaCOM.FormConditions(oConds)
+        End Try
+    End Function
     Private Function EventHandler_Form_Visible(ByRef objGlobal As EXO_UIAPI.EXO_UIAPI, ByRef pVal As ItemEvent) As Boolean
         Dim oForm As SAPbouiCOM.Form = Nothing
         Dim oRs As SAPbobsCOM.Recordset = CType(objGlobal.compañia.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset), SAPbobsCOM.Recordset)
@@ -354,26 +479,38 @@ Public Class PP_FRAGMENTOS
         Try
             oForm = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
             If oForm.Visible = True Then
-                sSQL = "SELECT ""UF"".""FldValue"",""UF"".""Descr"" From ""CUFD"" ""UT"" "
-                sSQL &= " INNER JOIN ""UFD1"" ""UF"" ON ""UT"".""FieldID""=""UF"".""FieldID"" and ""UT"".""TableID""=""UF"".""TableID"" "
+                If oForm.Mode <> BoFormMode.fm_ADD_MODE Then
+                    oForm.Items.Item("0_U_E").SetAutoManagedAttribute(BoAutoManagedAttr.ama_Editable, -1, BoModeVisualBehavior.mvb_False)
+                Else
+                    oForm.Items.Item("0_U_E").SetAutoManagedAttribute(BoAutoManagedAttr.ama_Editable, -1, BoModeVisualBehavior.mvb_True)
+                End If
+
+                'If oForm.Mode <> BoFormMode.fm_ADD_MODE Then
+                '    oForm.Items.Item("0_U_E").SetAutoManagedAttribute(BoAutoManagedAttr.ama_Editable, -1, BoModeVisualBehavior.mvb_False)
+                'End If
+                sSQL = "Select ""UF"".""FldValue"", ""UF"".""Descr"" From ""CUFD"" ""UT"" "
+                sSQL &= " INNER JOIN ""UFD1"" ""UF"" ON ""UT"".""FieldID""=""UF"".""FieldID"" And ""UT"".""TableID""=""UF"".""TableID"" "
                 sSQL &= " WHERE ""UT"".""TableID""='ORST' and ""UT"".""AliasID""='PP_TIPO'  Order by ""UF"".""FldValue"" "
                 objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).ValidValues, sSQL)
 
-                If CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).Selected IsNot Nothing Then
-                    Dim sTipo As String = CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).Selected.Value.ToString
-                    sSQL = "SELECT DISTINCT ""AbsEntry"", ""Code""  FROM ""ORST"" WHERE ""U_PP_TLIN""='O' and ""U_PP_TIPO""='" & sTipo & "' Order BY ""AbsEntry"" "
-                    objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_1").ValidValues, sSQL)
-                Else
-                    sSQL = "SELECT DISTINCT ""AbsEntry"", ""Code""  FROM ""ORST"" WHERE ""U_PP_TLIN""='O' and ""U_PP_TIPO""='Z' Order BY ""AbsEntry"" "
-                    objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_1").ValidValues, sSQL)
-                End If
-                For i = 1 To CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).RowCount
-                    If CType(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_5").Cells.Item(i).Specific, SAPbouiCOM.CheckBox).Checked = True Then
-                        CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).CommonSetting.SetCellEditable(i, 6, True)
-                    Else
-                        CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).CommonSetting.SetCellEditable(i, 6, False)
-                    End If
-                Next
+                CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).ExpandType = BoExpandType.et_DescriptionOnly
+                oForm.Items.Item("13_U_C").DisplayDesc = True
+
+                'If CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).Selected IsNot Nothing Then
+                '    Dim sTipo As String = CType(oForm.Items.Item("13_U_C").Specific, SAPbouiCOM.ComboBox).Selected.Value.ToString
+                '    sSQL = "SELECT DISTINCT ""AbsEntry"", ""Code""  FROM ""ORST"" WHERE ""U_PP_TLIN""='O' and ""U_PP_TIPO""='" & sTipo & "' Order BY ""AbsEntry"" "
+                '    objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_1").ValidValues, sSQL)
+                'Else
+                '    sSQL = "SELECT DISTINCT ""AbsEntry"", ""Code""  FROM ""ORST"" WHERE ""U_PP_TLIN""='O' and ""U_PP_TIPO""='Z' Order BY ""AbsEntry"" "
+                '    objGlobal.funcionesUI.cargaCombo(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_1").ValidValues, sSQL)
+                'End If
+                'For i = 1 To CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).RowCount
+                '    If CType(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_5").Cells.Item(i).Specific, SAPbouiCOM.CheckBox).Checked = True Then
+                '        CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).CommonSetting.SetCellEditable(i, 6, True)
+                '    Else
+                '        CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).CommonSetting.SetCellEditable(i, 6, False)
+                '    End If
+                'Next
             End If
 
             EventHandler_Form_Visible = True
@@ -388,22 +525,49 @@ Public Class PP_FRAGMENTOS
             EXO_CleanCOM.CLiberaCOM.liberaCOM(CType(oItem, Object))
         End Try
     End Function
-    Private Function EventHandler_ItemPressed_After(ByRef pVal As ItemEvent) As Boolean
+    Private Function EventHandler_ItemPressed_Before(ByRef pVal As ItemEvent) As Boolean
         Dim oForm As SAPbouiCOM.Form = Nothing
         Dim sSQL As String = "" : Dim oRs As SAPbobsCOM.Recordset = Nothing
+        EventHandler_ItemPressed_Before = False
+
+        Try
+            oForm = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
+
+            Select Case pVal.ItemUID
+                Case "B_ADD"
+                    Return AddNewLine(oForm)
+                Case "B_DEL"
+                    Return RemoveLine(oForm)
+                    'Case "C_0_5"
+                    '    If CType(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_5").Cells.Item(pVal.Row).Specific, SAPbouiCOM.CheckBox).Checked = True Then
+                    '        CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).CommonSetting.SetCellEditable(pVal.Row, 6, True)
+                    '    Else
+                    '        CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).CommonSetting.SetCellEditable(pVal.Row, 6, False)
+                    '    End If
+            End Select
+
+            EventHandler_ItemPressed_Before = True
+
+        Catch exCOM As System.Runtime.InteropServices.COMException
+            Throw exCOM
+        Catch ex As Exception
+            Throw ex
+        Finally
+            EXO_CleanCOM.CLiberaCOM.Form(oForm)
+        End Try
+    End Function
+    Private Function EventHandler_ItemPressed_After(ByRef pVal As ItemEvent) As Boolean
+        Dim oForm As SAPbouiCOM.Form = Nothing
+
         EventHandler_ItemPressed_After = False
 
         Try
             oForm = objGlobal.SBOApp.Forms.Item(pVal.FormUID)
 
-            Select Case pVal.ColUID
-                Case "C_0_5"
-                    If CType(CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).Columns.Item("C_0_5").Cells.Item(pVal.Row).Specific, SAPbouiCOM.CheckBox).Checked = True Then
-                        CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).CommonSetting.SetCellEditable(pVal.Row, 6, True)
-                    Else
-                        CType(oForm.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix).CommonSetting.SetCellEditable(pVal.Row, 6, False)
-                    End If
-            End Select
+            If pVal.ItemUID = "1" And pVal.ActionSuccess = True Then
+                RefreshList()
+                oForm.Items.Item("2").Click(BoCellClickType.ct_Regular)
+            End If
 
             EventHandler_ItemPressed_After = True
 
@@ -413,6 +577,116 @@ Public Class PP_FRAGMENTOS
             Throw ex
         Finally
             EXO_CleanCOM.CLiberaCOM.Form(oForm)
+        End Try
+    End Function
+
+    Private Function RefreshList() As Boolean
+
+        Dim Assembly As Assembly = Nothing
+        Dim calledType As Type = Nothing
+        Dim obj As Object = Nothing
+        Try
+
+            For i = 0 To objGlobal.SBOApp.Forms.Count - 1
+                If objGlobal.SBOApp.Forms.Item(i).TypeEx = "LIST_PP_FRAGMENTOS" Then
+                    LIST_PP_FRAGMENTOS.Load_Grid(objGlobal, objGlobal.SBOApp.Forms.Item(i))
+                End If
+            Next
+
+            Return True
+        Catch ex As Exception
+            objGlobal.Mostrar_Error(ex, EXO_UIAPI.EXO_UIAPI.EXO_TipoMensaje.Excepcion)
+            Return False
+        Finally
+            If objGlobal.tipoCliente = EXO_DIAPI.EXO_DIAPI.EXO_TipoCliente.Clasico Then
+            End If
+        End Try
+    End Function
+    Private Function AddNewLine(ByRef oform As SAPbouiCOM.Form, Optional ByVal Forzado As Boolean = False) As Boolean
+
+        Dim _oMatrix As SAPbouiCOM.Matrix = Nothing
+        Dim _SQL As String = ""
+        Dim NombreColumnaControl As String = ""
+        Dim CodigoColumnaControl As String = ""
+        Dim Tablas As String = ""
+        Dim Columna As Integer = 0
+
+        Try
+            _oMatrix = CType(oform.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix)
+            Tablas = "@PP_FRAGMENTOSL"
+
+            'Pasar a la fuente de datos lo que tenga la matrix
+            _oMatrix.FlushToDataSource()
+            'Mirar si tengo que cargar los combos
+            If _oMatrix.RowCount > 0 Then
+                'Mirar si tengo línea en blanco
+                With oform.DataSources.DBDataSources.Item(Tablas)
+                    If .Size <> 0 Then
+                        If .GetValue("U_PP_DOPE", .Size - 1) = "" Then
+                            If Forzado = False Then
+                                objGlobal.SBOApp.MessageBox("Ya tiene una línea disponible")
+                            End If
+                            _oMatrix.AutoResizeColumns()
+                            Return True
+                        Else
+                            .InsertRecord(.Size)
+                            _oMatrix.LoadFromDataSourceEx(True)
+                            _oMatrix.AutoResizeColumns()
+                        End If
+                    End If
+                End With
+            Else
+                _oMatrix.AddRow()
+                _oMatrix.FlushToDataSource()
+                _oMatrix.AutoResizeColumns()
+            End If
+
+            Return True
+        Catch ex As Exception
+            objGlobal.Mostrar_Error(ex, EXO_UIAPI.EXO_UIAPI.EXO_TipoMensaje.Excepcion)
+            Return False
+        Finally
+            If objGlobal.tipoCliente = EXO_DIAPI.EXO_DIAPI.EXO_TipoCliente.Clasico Then
+                EXO_CleanCOM.CLiberaCOM.FormMatrix(_oMatrix)
+            End If
+        End Try
+    End Function
+    Private Function RemoveLine(ByRef oform As SAPbouiCOM.Form) As Boolean
+
+        Dim _oMatrix As SAPbouiCOM.Matrix = Nothing
+        Dim Tablas As String = ""
+        Dim _Row As Integer = 0
+        Try
+            _oMatrix = CType(oform.Items.Item("0_U_G").Specific, SAPbouiCOM.Matrix)
+            Tablas = "@PP_FRAGMENTOSL"
+            Try
+                _Row = _oMatrix.GetNextSelectedRow(0, BoOrderType.ot_RowOrder)
+            Catch ex As Exception
+                _Row = -1
+            End Try
+            If _Row <= 0 Then
+                objGlobal.SBOApp.MessageBox("Debe seleccionar un detalle para eliminar!")
+                Return False
+            End If
+            If objGlobal.SBOApp.MessageBox("¿Está seguro que quiere eliminar el registro?", 2, "OK", "Cancelar") = 2 Then
+                Return False
+            End If
+            With oform.DataSources.DBDataSources.Item(Tablas)
+                .RemoveRecord(_Row - 1)
+            End With
+            _oMatrix.LoadFromDataSourceEx(True)
+            _oMatrix.AutoResizeColumns()
+            If oform.Mode = BoFormMode.fm_OK_MODE Then
+                oform.Mode = BoFormMode.fm_UPDATE_MODE
+            End If
+            Return AddNewLine(oform, True)
+        Catch ex As Exception
+            objGlobal.Mostrar_Error(ex, EXO_UIAPI.EXO_UIAPI.EXO_TipoMensaje.Excepcion)
+            Return False
+        Finally
+            If objGlobal.tipoCliente = EXO_DIAPI.EXO_DIAPI.EXO_TipoCliente.Clasico Then
+                EXO_CleanCOM.CLiberaCOM.FormMatrix(_oMatrix)
+            End If
         End Try
     End Function
 #End Region

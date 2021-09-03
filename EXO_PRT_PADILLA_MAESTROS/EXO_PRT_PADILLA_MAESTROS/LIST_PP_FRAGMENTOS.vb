@@ -121,7 +121,7 @@ Public Class LIST_PP_FRAGMENTOS
             End If
         End Try
     End Function
-    Public Function Load_Grid(ByRef objGlobal As EXO_UIAPI.EXO_UIAPI, ByRef oform As SAPbouiCOM.Form) As Boolean
+    Public Shared Function Load_Grid(ByRef objGlobal As EXO_UIAPI.EXO_UIAPI, ByRef oform As SAPbouiCOM.Form) As Boolean
 
         Dim SQL As String = ""
         Dim oGrid As SAPbouiCOM.Grid = Nothing
