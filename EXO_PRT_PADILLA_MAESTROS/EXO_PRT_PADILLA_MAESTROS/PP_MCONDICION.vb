@@ -48,7 +48,10 @@ Public Class PP_MCONDICION
             If infoEvento.BeforeAction = True Then
                 Select Case infoEvento.MenuUID
                     Case "1281", "1282"
-                        objGlobal.SBOApp.Forms.ActiveForm.Items.Item("0_U_E").SetAutoManagedAttribute(BoAutoManagedAttr.ama_Editable, -1, BoModeVisualBehavior.mvb_True)
+                        Select Case objGlobal.SBOApp.Forms.ActiveForm.TypeEx
+                            Case "UDO_FT_PP_MCONDICION"
+                                objGlobal.SBOApp.Forms.ActiveForm.Items.Item("0_U_E").SetAutoManagedAttribute(BoAutoManagedAttr.ama_Editable, -1, BoModeVisualBehavior.mvb_True)
+                        End Select
                 End Select
 
 
