@@ -39,7 +39,7 @@ Public Class EXO_CEXCEL
                 Select Case infoEvento.MenuUID
                     Case "PP-MnCFRG"
                         If CargarForm() = False Then
-                            Exit Function
+                            Return False
                         End If
                 End Select
             End If
