@@ -254,7 +254,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) "C:\Desarrollo\10.0.0.0\x64\DLLs\$(TargetFileName)"
-copy $(TargetPath) "C:\Desarrollo\Ficheros\10.Dll_64\EXT\$(TargetFileName)"</PostBuildEvent>
+copy $(TargetPath) "C:\Desarrollo\Ficheros\10.Dll_64\EXT\$(TargetFileName)"
+copy $(TargetPath) "C:\EO\TS\10.Dll_64\EXT\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
