@@ -133,7 +133,7 @@ Public Class LIST_PP_FRAGMENTOS
             SQL &= " FROM ""@PP_FRAGMENTOS"" ""FRG"" "
             SQL &= " LEFT JOIN ""UFD1"" ""UF"" ON ""FRG"".""U_PP_ENTIDAD""=""UF"".""FldValue"" "
             SQL &= " LEFT JOIN ""CUFD"" ""UT"" ON ""UT"".""FieldID""=""UF"".""FieldID"" And ""UT"".""TableID""=""UF"".""TableID"" "
-            SQL &= " WHERE ""UT"".""TableID""='ORST' and ""UT"".""AliasID""='PP_TIPO'"
+            SQL &= " WHERE ""UT"".""TableID""='ORST' and ""UT"".""AliasID""='PP_TIPO' ORDER BY ""FRG"".""Code"" ASC"
             oGrid.DataTable.ExecuteQuery(SQL)
             For i = 0 To oGrid.Columns.Count - 1
                 oGrid.Columns.Item(i).TitleObject.Sortable = True
